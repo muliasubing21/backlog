@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block style %}
+    .card-hover-effect {
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card-hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .bg-todo { background-color: #dc3545; }
+    .bg-in_progress { background-color: #ffc107; }
+    .bg-done { background-color: #28a745; }
+    @media (max-width: 768px) {
+        #taskStatusChart {
+            width: 100% !important;
+            height: auto !important;
+        }
+        .card-body {
+            padding: 0.5rem;
+        }
+    }
+{% endblock style %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between">
+        <h1>
+            <i class="bi bi-speedometer2 me-2"></i> 
+            Dashboard
+        </h1>
+    </div>
+    <hr class="mt-0 mb-5">
+    <div class="row">
+        <div class="col-xl-3 col-sm-6 col-12 mb-3">
+            <div class="card card-hover-effect animate__animated animate__fadeInUp">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex justify-content-between align-items-center px-2">
+                            <div class="media-body text-left">
+                                <h3 class="danger">{{ projects_count }}</h3>
+                                <span>Projects</span>
+                            </div>
+                            <i class="bi bi-rocket-takeoff display-5 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 mb-3">
+            <div class="card card-hover-effect animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex justify-content-between align-items-center px-2">
+                            <div class="media-body text-left">
+                                <h3 class="success">{{ tasks_count }}</h3>
+                                <span>Tasks</span>
+                            </div>
+                            <i class="bi bi-list-task display-5 text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 mb-3">
+            <div class="card card-hover-effect animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex justify-content-between align-items-center px-2">
+                            <div class="media-body text-left">
+                                <h3 class="success">{{ tasks_completed }}</h3>
+                                <span>Tasks Completed</span>
+                            </div>
+                            <i class="bi bi-check-circle display-5 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 mb-3">
+            <div class="card card-hover-effect animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex justify-content-between align-items-center px-2">
+                            <div class="media-body text-left">
+                                <h3 class="warning">{{ tasks_pending }}</h3>
+                                <span>Pending Tasks</span>
+                            </div>
+                            <i class="bi bi-hourglass-split display-5 text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title m-0">Recent Tasks</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for task in recent_tasks %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ task.name }} <span class="badge bg-{{ task.status|lower }}">{{ task.get_status_display }}</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No recent tasks</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title m-0">Task Status Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="taskStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('taskStatusChart').getContext('2d');
+        const tasksTodo = {{ tasks_todo|default:0 }};
+        const tasksInProgress = {{ tasks_in_progress|default:0 }};
+        const tasksCompleted = {{ tasks_completed|default:0 }};
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['To Do', 'In Progress', 'Done'],
+                datasets: [{
+                    label: 'Number of Tasks',
+                    data: [tasksTodo, tasksInProgress, tasksCompleted],
+                    backgroundColor: ['#dc3545', '#ffc107', '#28a745'],
+                    borderColor: ['#dc3545', '#ffc107', '#28a745'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true,
+                        title: { display: true, text: 'Tasks' } ,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        }
+                    },
+                    x: { title: { display: true, text: 'Status' } }
+                },
+                plugins: {
+                    legend: { display: false, position: 'top' },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+    });
+</script>
+{% endblock content %}

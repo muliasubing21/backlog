@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid mt-2">
+    <h1>Task</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_name" class="form-label">{{form.name.label}}<span class="text-danger ms-2">*</span></label>
+            {{form.name}}
+        </div>
+        <div class="mb-3">
+            <label for="id_description" class="form-label">{{form.description.label}}<span class="text-danger ms-2">*</span></label>
+            {{form.description}}
+        </div>
+        <div class="mb-3">
+            <label for="id_assigned_to" class="form-label">{{form.assigned_to.label}}</label>
+            {{form.assigned_to}}
+        </div>
+        <div class="mb-3">
+            <label for="id_status" class="form-label">{{form.status.label}}</label>
+            {{form.status}}
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+        <a href="{% url "tasks:index_tasks" project_id %}" class="btn btn-sm btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}
