@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light"> <!-- Default ke light mode -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,99 +13,107 @@
     <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <style>
-      .logout:hover {
-        background-color: #6c757d;
-        color: #fff
-      }
-
-      /* Styling untuk efek hover pada nav-link */
-      .nav-link {
-          position: relative; /* Untuk positioning garis bawah */
-          transition: color 0.3s ease; /* Transisi halus untuk warna teks */
-      }
-
-      /* Garis bawah animasi */
-      .nav-link::after {
-          content: '';
-          position: absolute;
-          width: 0;
-          height: 2px;
-          bottom: -2px; /* Posisi garis bawah */
-          left: 50%;
-          background-color: #007bff; /* Warna garis bawah (biru Bootstrap primary) */
-          transition: width 0.3s ease, left 0.3s ease; /* Animasi garis */
-      }
-
-      .nav-link:hover::after {
-          width: 100%; /* Garis memanjang */
-          left: 0; /* Mulai dari kiri */
-      }
-
-      /* Perubahan warna teks dan ikon saat hover */
-      .nav-link:hover {
-          color: #007bff !important; /* Warna teks saat hover */
-      }
-
-      /* Pastikan link aktif tidak terpengaruh efek hover yang berlebihan */
-      .nav-link.active::after {
-          width: 100%; /* Garis bawah selalu muncul pada link aktif */
-          left: 0;
-          background-color: #007bff; /* Warna garis untuk link aktif */
-      }
-
-      {% block style %}{% endblock style %}
+        /* Hanya styling minimal untuk tombol toggle */
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        /* Styling kustom sebelumnya tetap berlaku jika dibutuhkan */
+        .logout:hover {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background-color: #007bff;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        .nav-link:hover {
+            color: #007bff !important;
+        }
+        .nav-link.active::after {
+            width: 100%;
+            left: 0;
+            background-color: #007bff;
+        }
+        {% block style %}{% endblock style %}
     </style>
 </head>
-<body>  
+<body>
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-              <a class="navbar-brand" href="">
-                <img src="{% static "images/procedure.png" %}" alt="Backlog Logo" style="width:30px; height:30px" class="p-0">
-              </a>
-              <button class="navbar-toggler border-0 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon fs-6"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 column-gap-2">
-                  <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'index_dashboard' %}active{% endif %}" aria-current="page" href="{% url "dashboard:index_dashboard" %}">
-                      <i class="bi bi-speedometer2 me-2"></i> 
-                      Dashboard
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'index_projects' %}active{% endif %}" aria-current="page" href="{% url "projects:index_projects" %}">
-                      <i class="fa-solid fa-folder-open me-2"></i>
-                      Projects
-                    </a>
-                  </li>
-                  {% comment %} <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Dropdown
-                    </a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                  </li> {% endcomment %}
-                </ul>
-                {% comment %} <form class="d-flex" role="search">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
-                </form> {% endcomment %}
-                <a class="btn btn-sm btn-transparent logout" href="{% url "accounts:logout" %}">
-                  <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                <a class="navbar-brand" href="">
+                    <img src="{% static 'images/procedure.png' %}" alt="Backlog Logo" style="width:30px; height:30px" class="p-0">
                 </a>
-              </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 column-gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'index_dashboard' %}active{% endif %}" href="{% url 'dashboard:index_dashboard' %}">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'index_projects' %}active{% endif %}" href="{% url 'projects:index_projects' %}">
+                                <i class="fa-solid fa-folder-open me-2"></i> Projects
+                            </a>
+                        </li>
+                    </ul>
+                    <button class="theme-toggle-btn me-3" id="theme-toggle">
+                        <i class="fa-solid fa-sun"></i>
+                    </button>
+                    <a class="btn btn-sm btn-transparent logout" href="{% url 'accounts:logout' %}">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                    </a>
+                </div>
             </div>
-          </nav>
+        </nav>
     </header>
     <main class="pt-3">
-    {% block content %}{% endblock content %}
+        {% block content %}{% endblock content %}
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Cek preferensi sistem atau localStorage
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.setAttribute('data-bs-theme', 'dark');
+            toggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (html.getAttribute('data-bs-theme') === 'light') {
+                html.setAttribute('data-bs-theme', 'dark');
+                toggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-bs-theme', 'light');
+                toggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
